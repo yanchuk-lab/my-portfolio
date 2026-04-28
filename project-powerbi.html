@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de" id="htmlElement">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergii Yanchuk | Power BI: E-Commerce Ecosystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+    
+    body { 
+        font-family: 'Inter', sans-serif; 
+        background-color: #F4F4F4; 
+        color: #1A1A1A; 
+        scroll-behavior: smooth; 
+    }
+
+    .swiss-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+    
+    .huge-title { 
+        font-size: clamp(2.5rem, 8vw, 7rem); 
+        line-height: 0.9; 
+        letter-spacing: -0.05em; 
+        text-transform: uppercase; 
+        font-weight: 900; 
+    }
+
+    .border-black-thick { border-top: 4px solid #1A1A1A; }
+    .highlight-blue { color: #3B82F6; }
+    
+    .lang-switcher { cursor: pointer; font-weight: bold; text-decoration: underline; transition: opacity 0.3s; }
+    .lang-switcher.active { opacity: 1; color: #1A1A1A; }
+    .lang-switcher.inactive { opacity: 0.5; color: #9ca3af; }
+
+    .pbi-logo-big { width: 300px; height: 300px; opacity: 0.9; filter: grayscale(1); transition: all 0.6s ease; }
+    header:hover .pbi-logo-big { filter: grayscale(0); transform: rotate(5deg) scale(1.1); }
+    
+    .section-label { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: #3B82F6; margin-bottom: 1rem; display: block; }
+
+    .download-btn {
+        padding: 1rem 2rem;
+        background-color: #1A1A1A;
+        color: white;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 12px;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 8px 8px 0px 0px #3B82F6;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .download-btn:hover {
+        transform: translate(8px, 8px);
+        box-shadow: 0px 0px 0px 0px #3B82F6;
+        background-color: #3B82F6;
+    }
+
+    .project-image { 
+        filter: grayscale(100%); 
+        transition: all 0.4s ease-in-out;
+        border: 2px solid #000;
+        background-color: white;
+    }
+
+    .project-image:hover { 
+        filter: grayscale(0%); 
+        transform: scale(1.03);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .data-model-image {
+        filter: grayscale(100%); 
+        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 2px solid #000;
+        background-color: white;
+    }
+
+    .data-model-image:hover {
+        filter: grayscale(0%);
+        transform: scale(1.15); 
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        z-index: 20;
+        position: relative;
+    }
+</style>
+</head>
+<body class="p-6 md:p-12 lg:p-20">
+
+    <script>
+        const translations = {
+            de: {
+                'back-link': '← ZURÜCK',
+                'title': 'E-Commerce<br><span class="highlight-blue italic">Operatives Dashboard</span>',
+                'case-study': 'Case Study in Power BI',
+                'download-btn': '.PBIX DATEI HERUNTERLADEN',
+                'overview-main': 'Umfassende Business-Intelligence-Lösung zur Analyse von Sales, Logistik, Zahlungen und Feedback basierend auf dem Olist-Ecosystem.',
+                'goal-header': 'Projekt-Konzept',
+                'goal-text': 'Entwicklung von 4 interaktiven Dashboards zur Identifizierung von Wachstumsfaktoren und operativen Engpässen unter Einhaltung strikter UX/UI-Prinzipien.',
+                'context-header': 'Business-Metriken',
+                'context-text': 'Analyse der Customer Journey: von Leads und Pipeline Value bis zur On-Time Delivery Rate (SLA) und Kundenzufriedenheit.',
+                'work-header': 'Technische Umsetzung',
+                'work-text': 'Erstellung einer Sternstruktur (Star Schema), Datenbereinigung via Power Query (Merge/Translate) und erweiterte DAX-Modellierung (Time Intelligence).',
+                'metrics-list-header': 'Entwickelte Metriken (DAX)',
+                'metrics-sales': 'Sales: Revenue, AVG Check, Pipeline Value, Conversion, Active Customers, Sales_CNT.',
+                'metrics-logistics': 'Logistics: On-Time Delivery Rate, AVG Freight Value, Processing Time, Full Cycle Time.',
+                'metrics-advanced': 'Advanced: YoY-Vergleiche, dynamische Kalender, Drill-through-Seiten und Tooltips.',
+                'impact-metrics': 'Kern-Indikatoren',
+                'total-revenue': 'Revenue (Umsatz)',
+                'avg-rating': 'Satisfaction Index',
+                'delivery-rate': 'On-Time Delivery',
+                'total-orders': 'Total Sales_CNT',
+                'model-title': 'Sternschema & Datenbeziehungen',
+                'model-desc': 'Architektur der Daten: Verknüpfung von Bestellungen, Zahlungen, Kunden, Produkten und Bewertungen im Olist-Ecosystem.',
+                'insight-sales-t': 'Vertriebs-Trichter & YoY-Wachstum',
+                'insight-sales-d': 'Implementierung einer Funnel-Analyse. Zentrales Feature ist der YoY-Vergleich, um das Wachstum präzise zu messen.',
+                'insight-logistics-t': 'Logistik & SLA-Monitoring',
+                'insight-logistics-d': 'Geografische Analyse der Verkäuferdichte und Überwachung der Full Cycle Time.',
+                'insight-payments-t': 'Zahlungs- & Ratenanalyse',
+                'insight-payments-d': 'Untersuchung von Zahlungsmethoden und Ratenzahlungen zur Cashflow-Optimierung.',
+                'insight-feedback-t': 'Feedback & Performance-Nexus',
+                'insight-feedback-d': 'Korrelationsanalyse zwischen Lieferverzug und Review-Scores.',
+                'footer-project': 'Olist BI Final Project // Data Analytics Portfolio // 2026'
+            },
+            en: {
+                'back-link': '← BACK',
+                'title': 'E-Commerce<br><span class="highlight-blue italic">Operational Dashboard</span>',
+                'case-study': 'Case Study in Power BI',
+                'download-btn': 'DOWNLOAD .PBIX FILE',
+                'overview-main': 'Comprehensive Business Intelligence solution for analyzing Sales, Logistics, Payments, and Feedback within the Olist ecosystem.',
+                'goal-header': 'Project Concept',
+                'goal-text': 'Developing 4 interactive dashboards to identify growth drivers and operational bottlenecks following strict UX/UI principles.',
+                'context-header': 'Business Metrics',
+                'context-text': 'Analyzing the customer journey: from Leads and Pipeline Value to On-Time Delivery Rate (SLA) and Review Scores.',
+                'work-header': 'Technical Implementation',
+                'work-text': 'Engineered a Star Schema, data transformation via Power Query (Merge/Translate), and advanced DAX modeling (Time Intelligence).',
+                'metrics-list-header': 'Developed Metrics (DAX)',
+                'metrics-sales': 'Sales: Revenue, AVG Check, Pipeline Value, Conversion, Active Customers, Sales_CNT.',
+                'metrics-logistics': 'Logistics: On-Time Delivery Rate, AVG Freight Value, Processing Time, Full Cycle Time.',
+                'metrics-advanced': 'Advanced: Year-over-Year Comparisons, Dynamic Calendars, Drill-through, and Tooltips.',
+                'impact-metrics': 'Key Performance Indicators',
+                'total-revenue': 'Revenue',
+                'avg-rating': 'Satisfaction Index',
+                'delivery-rate': 'On-Time Delivery',
+                'total-orders': 'Total Sales_CNT',
+                'model-title': 'Star Schema & Data Relationships',
+                'model-desc': 'Data architecture: linking orders, payments, customers, products, and reviews within the Olist ecosystem.',
+                'insight-sales-t': 'Sales Funnel & YoY Analysis',
+                'insight-sales-d': 'Implemented an event-driven funnel. A key feature is the Year-over-Year (YoY) comparison for precise tracking.',
+                'insight-logistics-t': 'Logistics & SLA Monitoring',
+                'insight-logistics-d': 'Geographical analysis of seller distribution and monitoring of Full Cycle Time.',
+                'insight-payments-t': 'Payments & Installment Analysis',
+                'insight-payments-d': 'Examination of payment methods and installments to optimize cash flow insights.',
+                'insight-feedback-t': 'Feedback & Performance Nexus',
+                'insight-feedback-d': 'Correlation analysis between delivery delays and review scores.',
+                'footer-project': 'Olist BI Final Project // Data Analytics Portfolio // 2026'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'de';
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) element.innerHTML = translations[lang][key];
+            });
+            document.querySelectorAll('.lang-switcher').forEach(btn => {
+                btn.className = btn.getAttribute('data-lang') === lang ? 'lang-switcher active' : 'lang-switcher inactive';
+            });
+        }
+        window.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
+    </script>
+
+    <nav class="mb-12 flex justify-between items-center border-b-2 border-black pb-4">
+        <a href="index.html" class="font-bold uppercase tracking-tighter hover:text-blue-600 transition-colors" data-i18n="back-link"></a>
+        <div class="flex items-center gap-4 text-xs font-bold">
+            <span class="lang-switcher" data-lang="de" onclick="setLanguage('de')">DE</span>
+            <span class="text-gray-400">/</span>
+            <span class="lang-switcher" data-lang="en" onclick="setLanguage('en')">EN</span>
+        </div>
+    </nav>
+
+    <header class="grid grid-cols-12 gap-8 items-start mb-24">
+        <div class="col-span-12 lg:col-span-8">
+            <span class="section-label" data-i18n="case-study"></span>
+            <h1 class="huge-title mb-8" data-i18n="title"></h1>
+            <p class="text-gray-600 mb-6 font-medium leading-tight text-2xl max-w-2xl" data-i18n="overview-main"></p>
+            
+            <a href="https://drive.google.com/uc?export=download&id=1rowGDaFhNIej3W1zvhKMg5qf3_lduFNn" class="download-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span data-i18n="download-btn"></span>
+            </a>
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex justify-end">
+            <img src="pictures/New_Power_BI_Logo.svg" alt="Power BI Logo" class="pbi-logo-big">
+        </div>
+    </header>
+
+    <section class="swiss-grid mb-32 border-t-4 border-black pt-12">
+        <div class="col-span-12 md:col-span-4">
+            <span class="section-label" data-i18n="goal-header"></span>
+            <p class="text-lg font-bold leading-snug pr-8 italic mb-8" data-i18n="goal-text"></p>
+            <span class="section-label" data-i18n="context-header"></span>
+            <p class="text-sm text-gray-600 leading-relaxed pr-8" data-i18n="context-text"></p>
+        </div>
+        <div class="col-span-12 md:col-span-4">
+            <span class="section-label" data-i18n="work-header"></span>
+            <p class="text-sm text-gray-600 leading-relaxed mb-8" data-i18n="work-text"></p>
+            <div class="flex flex-wrap gap-2 mb-4 text-[10px] font-black uppercase">
+                <span class="border border-black px-2 py-1">Star Schema</span>
+                <span class="border border-black px-2 py-1">UX/UI Design</span>
+                <span class="border border-black px-2 py-1">Time Intelligence</span>
+            </div>
+        </div>
+        <div class="col-span-12 md:col-span-4 bg-zinc-100 p-6">
+            <span class="section-label" data-i18n="metrics-list-header"></span>
+            <ul class="space-y-4">
+                <li><p class="text-[11px] font-bold leading-tight text-gray-700" data-i18n="metrics-sales"></p></li>
+                <li><p class="text-[11px] font-bold leading-tight text-gray-700" data-i18n="metrics-logistics"></p></li>
+                <li><p class="text-[11px] font-bold leading-tight text-gray-700" data-i18n="metrics-advanced"></p></li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="swiss-grid mb-32 bg-white p-10 border-4 border-black shadow-[15px_15px_0px_0px_#3B82F6]">
+        <div class="col-span-12 md:col-span-3">
+            <h2 class="text-xs font-black uppercase tracking-widest text-blue-600" data-i18n="impact-metrics"></h2>
+        </div>
+        <div class="col-span-12 md:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-12">
+            <div><p class="text-6xl font-black italic tracking-tighter">R$ 8.7M</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="total-revenue"></p></div>
+            <div><p class="text-6xl font-black italic tracking-tighter">4.09</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="avg-rating"></p></div>
+            <div><p class="text-6xl font-black italic tracking-tighter">90.6%</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="delivery-rate"></p></div>
+            <div><p class="text-6xl font-black italic tracking-tighter">100K</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="total-orders"></p></div>
+        </div>
+    </section>
+
+    <main class="space-y-52">
+        
+        <section class="swiss-grid items-center">
+            <div class="col-span-12 lg:col-span-4 lg:pr-16 order-2 lg:order-1">
+                <span class="section-label">Schema // Architecture</span>
+                <h3 class="text-4xl font-black uppercase mb-6 leading-none" data-i18n="model-title"></h3>
+                <p class="text-gray-600 text-lg leading-relaxed italic" data-i18n="model-desc"></p>
+            </div>
+            <div class="col-span-12 lg:col-span-8 order-1 lg:order-2">
+                <img src="pictures/PowerBI_model.png" class="data-model-image w-full">
+            </div>
+        </section>
+
+        <section class="swiss-grid items-center">
+            <div class="col-span-12 lg:col-span-8">
+                <img src="pictures/PowerBI_sales.png" class="project-image w-full">
+            </div>
+            <div class="col-span-12 lg:col-span-4 lg:pl-16">
+                <span class="section-label">Dashboard 1 // Sales</span>
+                <h3 class="text-4xl font-black uppercase mb-6 leading-none" data-i18n="insight-sales-t"></h3>
+                <p class="text-gray-600 text-lg leading-relaxed italic" data-i18n="insight-sales-d"></p>
+            </div>
+        </section>
+
+        <section class="swiss-grid items-center">
+            <div class="col-span-12 lg:col-span-4 order-2 lg:order-1 lg:pr-16">
+                <span class="section-label text-right lg:text-left">Dashboard 2 // Logistics</span>
+                <h3 class="text-4xl font-black uppercase mb-6 leading-none text-right lg:text-left" data-i18n="insight-logistics-t"></h3>
+                <p class="text-gray-600 text-lg leading-relaxed italic text-right lg:text-left" data-i18n="insight-logistics-d"></p>
+            </div>
+            <div class="col-span-12 lg:col-span-8 order-1 lg:order-2">
+                <img src="pictures/PowerBI_logistics.png" class="project-image w-full">
+            </div>
+        </section>
+
+        <section class="swiss-grid items-center">
+            <div class="col-span-12 lg:col-span-8">
+                <img src="pictures/PowerBI_payments.png" class="project-image w-full">
+            </div>
+            <div class="col-span-12 lg:col-span-4 lg:pl-16">
+                <span class="section-label">Dashboard 3 // Payments</span>
+                <h3 class="text-4xl font-black uppercase mb-6 leading-none" data-i18n="insight-payments-t"></h3>
+                <p class="text-gray-600 text-lg leading-relaxed italic" data-i18n="insight-payments-d"></p>
+            </div>
+        </section>
+
+        <section class="swiss-grid items-center pb-20">
+            <div class="col-span-12 lg:col-span-4 order-2 lg:order-1 lg:pr-16">
+                <span class="section-label text-right lg:text-left">Dashboard 4 // Feedback</span>
+                <h3 class="text-4xl font-black uppercase mb-6 leading-none text-right lg:text-left" data-i18n="insight-feedback-t"></h3>
+                <p class="text-gray-600 text-lg leading-relaxed italic text-right lg:text-left" data-i18n="insight-feedback-d"></p>
+            </div>
+            <div class="col-span-12 lg:col-span-8 order-1 lg:order-2">
+                <img src="pictures/PowerBI_feedback.png" class="project-image w-full">
+            </div>
+        </section>
+    </main>
+
+    <footer class="swiss-grid border-t-4 border-black pt-12 pb-20 mt-32">
+        <div class="col-span-12 md:col-span-6">
+            <p class="text-5xl font-black uppercase italic tracking-tighter text-zinc-900">Sergii Yanchuk</p>
+        </div>
+        <div class="col-span-12 md:col-span-6 md:text-right flex flex-col justify-end text-gray-400 text-[10px] font-black uppercase tracking-widest">
+            <p data-i18n="footer-project"></p>
+        </div>
+    </footer>
+
+</body>
+</html>

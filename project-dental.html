@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de" id="htmlElement">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergii Yanchuk | Case Study: Dental Clinic Operations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #F4F4F4; 
+            color: #1A1A1A; 
+            line-height: 1.2;
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(244, 244, 244, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .sticky-nav:hover { background-color: rgba(244, 244, 244, 0.9); }
+
+        .swiss-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+        
+        .huge-title { 
+            font-size: clamp(2.5rem, 8vw, 7rem); 
+            line-height: 0.9; 
+            letter-spacing: -0.05em; 
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        .border-black-thick { border-top: 4px solid #1A1A1A; }
+        .highlight-green { color: #0F9D58; }
+
+        .project-image-container {
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transform-origin: center;
+            filter: grayscale(100%);
+        }
+        .project-image-container:hover { 
+            filter: grayscale(0%);
+            transform: scale(1.03);
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.35);
+            z-index: 10;
+        }
+
+        .lang-switcher {
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+        .lang-switcher.active { opacity: 1; color: #1A1A1A; }
+        .lang-switcher.inactive { opacity: 0.5; color: #9ca3af; }
+
+        .sheets-logo-big {
+            width: 280px;
+            height: 280px;
+            opacity: 0.9;
+            filter: grayscale(1);
+            transition: all 0.6s ease;
+        }
+        header:hover .sheets-logo-big {
+            filter: grayscale(0);
+            transform: rotate(-5deg) scale(1.05);
+        }
+
+        .gsheets-btn-styled {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: #1A1A1A;
+            color: white;
+            padding: 1rem 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 13px;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 6px 6px 0px 0px #0F9D58;
+            border: 2px solid #1A1A1A;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gsheets-btn-styled:hover {
+            background-color: #0F9D58;
+            border-color: #0F9D58;
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px #0F9D58;
+        }
+
+        .gsheets-btn-styled:active {
+            transform: translate(6px, 6px);
+            filter: brightness(0.9);
+        }
+
+        #presentation-container:fullscreen {
+            background: black;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 lg:p-20 pt-0">
+
+    <script>
+        const translations = {
+            de: {
+                'back-link': '← ZURÜCK',
+                'title': 'Patient Flow<br>& <span class="highlight-green italic">Growth Analysis</span>',
+                'case-study': 'Business Case Study',
+                'overview': 'Optimierung der betrieblichen Effizienz und datengestützte Skalierung des medizinischen Personals.',
+                'impact-metrics': 'Impact Metrics',
+                'missed-visits': 'Missed Visits identifiziert',
+                'revenue-potential': 'Umsatzpotenzial gesichert',
+                'market-awareness': 'Markt-Bekanntheit',
+                'nps': 'Net Promoter Score (NPS)',
+                'figure-caption': 'Fig 01. Patient Acquisition Analysis',
+                'sheet-info': 'Sheet: Operations_Summary',
+                'goal-title': 'Goal',
+                'goal-subtitle': 'Skalierungs- & Marketing-Audit',
+                'goal-desc': 'Entwicklung eines Analysetools zur Bewertung der Marketing-Performance und zur Identifikation von Engpässen inтной Patientenversorgung.',
+                'context-title': 'Context',
+                'context-desc': 'Der Datensatz umfasst 1.890 Patienten und 3.597 Besuche über 12 Monate. Fokus: Kapazitätsplanung beim Übergang von 2 auf 4 Ärzte in einer wachsenden Klinik.',
+                'tech-title': 'Technical Implementation',
+                'tech-01': 'KPI Monitoring:',
+                'tech-01-desc': 'Entwurf eines Dashboards zur Visualisierung des Patient-Lifecycles und der Marketing-Effizienz.',
+                'tech-02': 'Bottleneck Analysis:',
+                'tech-02-desc': 'Vergleich von Patientenanfragen (Requests) mit der maximalen Belastungsgrenзе (Max Load) zur Aufdeckung von Personalmangel.',
+                'tech-03': 'Cohort Modeling:',
+                'tech-03-desc': 'Validierung der Retention-Rate von Rabatt-Aktionen im Vergleich zu Empfehlungsprogrammen über 6-Monats-Zyklen.',
+                'tech-04': 'Loss Calculation:',
+                'tech-04-desc': 'Quantifizierung von 1.100+ "Missed Visits" – Analyse des entgangenen Umsatzes durch Kapazitätsüberschreitung.',
+                'tech-05': 'Strategic Advisory:',
+                'tech-05-desc': 'Bereitstellung der Datenbasis für die Einstellung von 2 Ärzten zur Sicherung eines Jahresumsatzes von ca. €110.000.',
+                'sheet-button': 'Google Sheets Link →',
+                'download-pdf': 'Präsentation herunterladen (PDF) ↓',
+                'presentation-header': 'Case Presentation',
+                'footer-project': 'Project: Dent Studio Analysis // 2026',
+                'expand-btn': 'Expand [ ]'
+            },
+            en: {
+                'back-link': '← BACK',
+                'title': 'Patient Flow<br>& <span class="highlight-green italic">Growth Analysis</span>',
+                'case-study': 'Business Case Study',
+                'overview': 'Optimization of operational efficiency and data-driven scaling of medical staff.',
+                'impact-metrics': 'Impact Metrics',
+                'missed-visits': 'Missed Visits Identified',
+                'revenue-potential': 'Revenue Potential Secured',
+                'market-awareness': 'Market Awareness',
+                'nps': 'Net Promoter Score (NPS)',
+                'figure-caption': 'Fig 01. Patient Acquisition Analysis',
+                'sheet-info': 'Sheet: Operations_Summary',
+                'goal-title': 'Goal',
+                'goal-subtitle': 'Scaling & Marketing Audit',
+                'goal-desc': 'Development of an analysis tool for assessing marketing performance and identifying bottlenecks in patient care.',
+                'context-title': 'Context',
+                'context-desc': 'Dataset includes 1,890 patients and 3,597 visits over 12 months. Focus: Capacity planning during transition from 2 to 4 physicians in a growing clinic.',
+                'tech-title': 'Technical Implementation',
+                'tech-01': 'KPI Monitoring:',
+                'tech-01-desc': 'Design of a dashboard to visualize patient lifecycle and marketing efficiency.',
+                'tech-02': 'Bottleneck Analysis:',
+                'tech-02-desc': 'Comparison of patient requests with maximum capacity threshold to identify staffing shortages.',
+                'tech-03': 'Cohort Modeling:',
+                'tech-03-desc': 'Validation of retention rates for discount campaigns versus referral programs over 6-month cycles.',
+                'tech-04': 'Loss Calculation:',
+                'tech-04-desc': 'Quantification of 1,100+ "Missed Visits" – analysis of lost revenue due to capacity constraints.',
+                'tech-05': 'Strategic Advisory:',
+                'tech-05-desc': 'Providing data foundation for hiring 2 physicians to secure annual revenue of approximately €110,000.',
+                'sheet-button': 'Google Sheets Link →',
+                'download-pdf': 'Download Presentation (PDF) ↓',
+                'presentation-header': 'Case Presentation',
+                'footer-project': 'Project: Dent Studio Analysis // 2026',
+                'expand-btn': 'Expand [ ]'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'de';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+            document.querySelectorAll('.lang-switcher').forEach(btn => {
+                btn.className = btn.getAttribute('data-lang') === lang ? 'lang-switcher active' : 'lang-switcher inactive';
+            });
+        }
+
+        function toggleFullscreen() {
+            const elem = document.getElementById('presentation-container');
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen?.() || elem.webkitRequestFullscreen?.() || elem.msRequestFullscreen?.();
+            } else {
+                document.exitFullscreen?.();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
+    </script>
+
+    <nav class="sticky-nav mb-12 flex justify-between items-center py-6 px-4 md:px-0">
+        <a href="index.html" class="font-bold uppercase tracking-tighter hover:text-green-600 transition-colors opacity-70 hover:opacity-100" data-i18n="back-link"></a>
+        <div class="flex items-center gap-4 text-xs font-bold">
+            <span class="lang-switcher" data-lang="de" onclick="setLanguage('de')">DE</span>
+            <span class="text-gray-400">/</span>
+            <span class="lang-switcher" data-lang="en" onclick="setLanguage('en')">EN</span>
+        </div>
+    </nav>
+
+    <header class="grid grid-cols-12 gap-8 items-start mb-32 px-4 md:px-0">
+        <div class="col-span-12 lg:col-span-8">
+            <h1 class="huge-title mb-8" data-i18n="title"></h1>
+            <div class="border-black-thick pt-4">
+                <p class="text-[10px] font-black uppercase mb-4 tracking-widest text-gray-400" data-i18n="case-study"></p>
+                <p class="text-gray-600 mb-6 font-medium leading-tight text-lg max-w-2xl" data-i18n="overview"></p>
+                
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <a href="https://docs.google.com/spreadsheets/d/1MjoVm6vM8wXYPMKBuXdY9KWnaSDFYu0_c8kBxGBD60M/edit?usp=sharing" 
+                       target="_blank" 
+                       class="gsheets-btn-styled" 
+                       data-i18n="sheet-button">
+                    </a>
+
+                    <a href="https://drive.google.com/uc?export=download&id=1n72mVMtzU53xcwqpA2xIDbqWlw3nmY5k" 
+                       class="gsheets-btn-styled" 
+                       data-i18n="download-pdf">
+                    </a>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    <span class="border border-black px-2 py-1 text-[10px] font-bold uppercase">Google Sheets</span>
+                    <span class="border border-black px-2 py-1 text-[10px] font-bold uppercase">Business Intelligence</span>
+                    <span class="border border-black px-2 py-1 text-[10px] font-bold uppercase">Operations</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex justify-end">
+            <img src="pictures/Google_Sheets_2020_Logo.svg" alt="Google Sheets Logo" class="sheets-logo-big">
+        </div>
+    </header>
+
+    <section class="swiss-grid mb-32 bg-white p-8 border-2 border-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] mx-4 md:mx-0">
+        <div class="col-span-12 md:col-span-3">
+            <h2 class="text-xs font-black uppercase tracking-widest text-green-600" data-i18n="impact-metrics"></h2>
+        </div>
+        <div class="col-span-12 md:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div><p class="text-5xl font-black italic tracking-tighter text-green-600">1.1k+</p><p class="text-[10px] font-bold uppercase text-gray-500" data-i18n="missed-visits"></p></div>
+            <div><p class="text-5xl font-black italic tracking-tighter">€110k</p><p class="text-[10px] font-bold uppercase text-gray-500" data-i18n="revenue-potential"></p></div>
+            <div><p class="text-5xl font-black italic tracking-tighter">75%</p><p class="text-[10px] font-bold uppercase text-gray-500" data-i18n="market-awareness"></p></div>
+            <div><p class="text-5xl font-black italic tracking-tighter">48%</p><p class="text-[10px] font-bold uppercase text-gray-500" data-i18n="nps"></p></div>
+        </div>
+    </section>
+
+    <section class="mb-32 px-4 md:px-0">
+        <div class="swiss-grid">
+            <div class="col-span-12 lg:col-span-8">
+                <div class="project-image-container border-2 border-black p-2 bg-white overflow-hidden">
+                    <img src="pictures/Google_Sheets.png" alt="Operational Dashboard" class="w-full h-auto block">
+                </div>
+                <div class="mt-8 flex justify-between border-t border-black pt-4 text-[10px] font-bold uppercase">
+                    <p data-i18n="figure-caption"></p>
+                    <p data-i18n="sheet-info"></p>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 lg:pl-12 space-y-10">
+                <div class="border-black-thick pt-4">
+                    <h3 class="text-[10px] font-black uppercase mb-2 text-green-600 tracking-widest underline" data-i18n="goal-title"></h3>
+                    <p class="text-[15px] font-black uppercase italic leading-none mb-2 text-zinc-800" data-i18n="goal-subtitle"></p>
+                    <p class="text-sm text-gray-700 leading-relaxed" data-i18n="goal-desc"></p>
+                </div>
+
+                <div class="border-black-thick pt-4">
+                    <h3 class="text-[10px] font-black uppercase mb-2 text-green-600 tracking-widest underline" data-i18n="context-title"></h3>
+                    <p class="text-xs text-gray-600 leading-relaxed italic" data-i18n="context-desc"></p>
+                </div>
+
+                <div class="border-black-thick pt-4">
+                    <h3 class="text-[10px] font-black uppercase mb-2 text-green-600 tracking-widest underline" data-i18n="tech-title"></h3>
+                    <ul class="text-[13px] leading-relaxed text-gray-800 space-y-4 mt-4">
+                        <li><span class="block font-bold uppercase text-[11px]" data-i18n="tech-01"></span><span data-i18n="tech-01-desc"></span></li>
+                        <li><span class="block font-bold uppercase text-[11px]" data-i18n="tech-02"></span><span data-i18n="tech-02-desc"></span></li>
+                        <li><span class="block font-bold uppercase text-[11px]" data-i18n="tech-03"></span><span data-i18n="tech-03-desc"></span></li>
+                        <li><span class="block font-bold uppercase text-[11px]" data-i18n="tech-04"></span><span data-i18n="tech-04-desc"></span></li>
+                        <li><span class="block font-bold uppercase text-[11px]" data-i18n="tech-05"></span><span data-i18n="tech-05-desc"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-32 px-4 md:px-0">
+        <div class="flex justify-between items-end mb-8 px-2 border-b-2 border-black pb-4">
+            <h2 class="text-xs font-black uppercase tracking-[0.2em]" data-i18n="presentation-header"></h2>
+            <span class="text-[10px] font-bold uppercase opacity-50">Interactive Slides / 1s Autoplay</span>
+        </div>
+        
+        <div id="presentation-container" class="relative border-2 border-black bg-white shadow-[15px_15px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+            <div class="relative w-full overflow-hidden" style="padding-top: 56.25%;">
+                <iframe 
+                    src="https://docs.google.com/presentation/d/1yoxV0T4dV7cZ1ynmiiQBqcNe5pCGLZTfxO5cARe8RS4/embed?start=true&loop=true&delayms=1000&rm=minimal" 
+                    frameborder="0" class="absolute top-0 left-0 w-full h-full" allowfullscreen="true" style="border: none; background: transparent;">
+                </iframe>
+            </div>
+            <button onclick="toggleFullscreen()" class="absolute bottom-4 right-4 bg-black text-white px-4 py-2 text-[10px] font-black uppercase hover:bg-green-600 transition-all z-10 shadow-[4px_4px_0px_0px_rgba(15,157,88,1)]" data-i18n="expand-btn">
+            </button>
+        </div>
+    </section>
+
+    <footer class="swiss-grid border-black-thick pt-8 pb-20 mx-4 md:mx-0">
+        <div class="col-span-12 md:col-span-6">
+            <p class="text-5xl font-black uppercase italic tracking-tighter text-zinc-900">Sergii Yanchuk</p>
+        </div>
+        <div class="col-span-12 md:col-span-6 md:text-right flex flex-col justify-end">
+            <p class="text-xs font-bold uppercase text-gray-400" data-i18n="footer-project"></p>
+        </div>
+    </footer>
+
+</body> 
+</html>

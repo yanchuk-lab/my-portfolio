@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="de" id="htmlElement">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergii Yanchuk | Tableau Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #F4F4F4; 
+            color: #1A1A1A; 
+            line-height: 1.2;
+        }
+
+        /* --- Липкая навигация --- */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(244, 244, 244, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .sticky-nav:hover { background-color: rgba(244, 244, 244, 0.9); }
+
+        .huge-title { 
+            font-size: clamp(2.5rem, 8vw, 7rem); 
+            line-height: 0.9; 
+            letter-spacing: -0.05em; 
+            text-transform: uppercase; 
+            font-weight: 900;
+        }
+
+        .project-card { 
+            border-top: 2px solid #1A1A1A; 
+            padding-top: 2rem;
+            padding-bottom: 4rem;
+            transition: all 0.4s ease;
+        }
+
+        .preview-box {
+            border: 1px solid #1A1A1A;
+            background: white;
+            padding: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .preview-img {
+            filter: grayscale(100%);
+            transition: all 0.5s ease;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .project-card:hover .preview-img { filter: grayscale(0%); }
+        .project-card:hover .preview-box {
+            transform: translateY(-8px);
+            box-shadow: 12px 12px 0px 0px #E8762E;
+        }
+
+        .tag { 
+            border: 1px solid #1A1A1A; 
+            padding: 2px 8px; 
+            font-size: 10px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+        }
+
+        .lang-switcher {
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+        .lang-switcher.active { opacity: 1; color: #1A1A1A; }
+        .lang-switcher.inactive { opacity: 0.5; color: #9ca3af; }
+
+        .btn-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 12px;
+            text-decoration: underline;
+            letter-spacing: 0.05em;
+        }
+        .btn-link:hover { color: #E8762E; }
+
+        .tableau-logo-big {
+            width: 300px;
+            height: 300px;
+            opacity: 0.9;
+            filter: grayscale(1);
+            transition: all 0.6s ease;
+        }
+        header:hover .tableau-logo-big {
+            filter: grayscale(0);
+            transform: rotate(5deg) scale(1.1);
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 lg:p-16 pt-0"> 
+    
+    <script>
+        const translations = {
+            de: {
+                'back-link': '← ZURÜCK',
+                'hub-title': 'Tableau<br><span class="text-orange-600 italic">Portfolio</span>',
+                'hub-desc': 'Eine Sammlung interaktiver Dashboards mit Fokus auf betriebliche Effizienz, Sales Mining und UI/UX-Design.',
+                'view-dash': 'Dashboard anzeigen ↗',
+                'p1-title': 'US Flugverspätungen',
+                'p1-desc': 'Analyse von 5,8 Mio. Flügen für das Verkehrsministerium. Identifizierung von Mustern zur Optimierung der Flugpläne.',
+                'p2-title': 'Global Orders Hub',
+                'p2-desc': 'Erweitertes Tableau-Interface mit Schiebefiltern. Fokus auf regionale Logistik и Retourenquoten.',
+                'p3-title': 'Sales Performance',
+                'p3-desc': 'Analyse der Rentabilität von Kategorien und Kundensegmenten zur Identifizierung von Wachstumstreibern.',
+                'p4-title': 'Executive Overview',
+                'p4-desc': 'Strategische KPI-Ansicht für das Management. Fokus auf Nettogewinn und globale Geschäftskennzahlen.',
+                'p5-title': 'Aktivitätskalender',
+                'p5-desc': 'Beherrschung von Datumslogik und komplexen Berechnungen zur Erstellung individueller Kalenderraster.',
+                'footer-project': 'Data Analysis Hub // 2026'
+            },
+            en: {
+                'back-link': '← BACK',
+                'hub-title': 'Tableau<br><span class="text-orange-600 italic">Portfolio</span>',
+                'hub-desc': 'A collection of interactive dashboards focusing on operational efficiency, sales mining, and advanced UI/UX in BI.',
+                'view-dash': 'View Dashboard ↗',
+                'p1-title': 'US Flight Delays',
+                'p1-desc': 'Analyzing 5.8 million flights for the Department of Transportation. Identifying patterns to optimize scheduling.',
+                'p2-title': 'Global Orders Hub',
+                'p2-desc': 'Advanced Tableau interface with sliding filter panels. Focused on regional logistics and return rates.',
+                'p3-title': 'Sales Performance',
+                'p3-desc': 'Deep dive into retail categories and customer segments. Visualizing year-over-year growth and margin.',
+                'p4-title': 'Executive KPI',
+                'p4-desc': 'Condensed strategic view for decision-makers. Focus on net profit and global business health.',
+                'p5-title': 'Activity Calendar',
+                'p5-desc': 'Mastery of date logic and complex grid calculations to create custom temporal visualizations.',
+                'footer-project': 'Tableau Ecosystem // 2026'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'de';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (key === 'hub-title') {
+                        element.innerHTML = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-switcher').forEach(btn => {
+                btn.className = btn.getAttribute('data-lang') === lang ? 'lang-switcher active' : 'lang-switcher inactive';
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
+    </script>
+
+    <nav class="sticky-nav mb-24 flex justify-between items-center py-6 px-4 md:px-0">
+        <a href="index.html" class="font-bold uppercase tracking-tighter hover:text-orange-600 transition-colors opacity-70 hover:opacity-100" data-i18n="back-link"></a>
+        <div class="flex items-center gap-4 text-xs font-bold">
+            <span class="lang-switcher" data-lang="de" onclick="setLanguage('de')">DE</span>
+            <span class="text-gray-400">/</span>
+            <span class="lang-switcher" data-lang="en" onclick="setLanguage('en')">EN</span>
+        </div>
+    </nav>
+
+    <header class="mb-40 grid grid-cols-12 gap-8 items-start px-4 md:px-0">
+        <div class="col-span-12 lg:col-span-7">
+            <h1 class="huge-title mb-8" data-i18n="hub-title"></h1>
+            <p class="text-lg font-medium leading-tight uppercase text-gray-500 border-l-4 border-black pl-6 max-w-xl" data-i18n="hub-desc"></p>
+        </div>
+        <div class="col-span-12 lg:col-span-5 flex justify-end lg:pt-4">
+            <img src="pictures/icons8-tableau-software-480.svg" alt="Tableau Logo" class="tableau-logo-big">
+        </div>
+    </header>
+
+    <main class="px-4 md:px-0">
+        <section class="project-card grid grid-cols-12 gap-8">
+            <div class="col-span-12 lg:col-span-4">
+                <span class="text-xs font-bold italic mb-4 block">01 / Logistics</span>
+                <h2 class="text-4xl font-black uppercase tracking-tighter mb-4 leading-none" data-i18n="p1-title"></h2>
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="tag">Big Data</span><span class="tag">Operations</span>
+                </div>
+                <p class="text-sm font-medium text-gray-700 uppercase leading-snug" data-i18n="p1-desc"></p>
+                <a href="https://public.tableau.com/views/Project_17634017498580/Dashboard" target="_blank" class="btn-link" data-i18n="view-dash"></a>
+            </div>
+            <div class="col-span-12 lg:col-span-8">
+                <div class="preview-box"><img src="pictures/Dashboard_Tableu_flights.png" class="preview-img"></div>
+            </div>
+        </section>
+
+        <section class="project-card grid grid-cols-12 gap-8">
+            <div class="col-span-12 lg:col-span-4">
+                <span class="text-xs font-bold italic mb-4 block">02 / UI Design</span>
+                <h2 class="text-4xl font-black uppercase tracking-tighter mb-4 leading-none" data-i18n="p2-title"></h2>
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="tag">Interface</span><span class="tag">Supply Chain</span>
+                </div>
+                <p class="text-sm font-medium text-gray-700 uppercase leading-snug" data-i18n="p2-desc"></p>
+                <a href="https://public.tableau.com/views/EU_Superstore_17620768437700/EUSuperstore" target="_blank" class="btn-link" data-i18n="view-dash"></a>
+            </div>
+            <div class="col-span-12 lg:col-span-8">
+                <div class="preview-box"><img src="pictures/Dashboard_superstore_orders.png" class="preview-img"></div>
+            </div>
+        </section>
+
+        <section class="project-card grid grid-cols-12 gap-8">
+            <div class="col-span-12 lg:col-span-4">
+                <span class="text-xs font-bold italic mb-4 block">03 / Retail</span>
+                <h2 class="text-4xl font-black uppercase tracking-tighter mb-4 leading-none" data-i18n="p3-title"></h2>
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="tag">Mining</span><span class="tag">Profitability</span>
+                </div>
+                <p class="text-sm font-medium text-gray-700 uppercase leading-snug" data-i18n="p3-desc"></p>
+                <a href="https://public.tableau.com/views/Superset_17598245301450/SuperstoreSalesDashboard" target="_blank" class="btn-link" data-i18n="view-dash"></a>
+            </div>
+            <div class="col-span-12 lg:col-span-8">
+                <div class="preview-box"><img src="pictures/Superstore_sales_dashboard.png" class="preview-img"></div>
+            </div>
+        </section>
+
+        <section class="project-card grid grid-cols-12 gap-8">
+            <div class="col-span-12 lg:col-span-4">
+                <span class="text-xs font-bold italic mb-4 block">04 / Executive</span>
+                <h2 class="text-4xl font-black uppercase tracking-tighter mb-4 leading-none" data-i18n="p4-title"></h2>
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="tag">KPI</span><span class="tag">Management</span>
+                </div>
+                <p class="text-sm font-medium text-gray-700 uppercase leading-snug" data-i18n="p4-desc"></p>
+                <a href="https://public.tableau.com/views/Superset_17598245301450/SuperstoreHigh-LevelDashboard" target="_blank" class="btn-link" data-i18n="view-dash"></a>
+            </div>
+            <div class="col-span-12 lg:col-span-8">
+                <div class="preview-box"><img src="pictures/superstore_high-level_dashboard.png" class="preview-img"></div>
+            </div>
+        </section>
+
+        <section class="project-card grid grid-cols-12 gap-8 border-b-2 border-black">
+            <div class="col-span-12 lg:col-span-4">
+                <span class="text-xs font-bold italic mb-4 block">05 / Visualization</span>
+                <h2 class="text-4xl font-black uppercase tracking-tighter mb-4 leading-none" data-i18n="p5-title"></h2>
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="tag">Calculations</span><span class="tag">Custom Viz</span>
+                </div>
+                <p class="text-sm font-medium text-gray-700 uppercase leading-snug" data-i18n="p5-desc"></p>
+                <a href="https://public.tableau.com/views/Superset_17598245301450/HW_14_Calender_by_Ship_Date" target="_blank" class="btn-link" data-i18n="view-dash"></a>
+            </div>
+            <div class="col-span-12 lg:col-span-8">
+                <div class="preview-box"><img src="pictures/Calender.png" class="preview-img"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-40 grid grid-cols-12 gap-8 pb-12 px-4 md:px-0">
+        <div class="col-span-12 md:col-span-6">
+            <p class="text-6xl font-black uppercase italic tracking-tighter">Sergii Yanchuk</p>
+        </div>
+        <div class="col-span-12 md:col-span-6 md:text-right flex flex-col justify-end">
+            <p class="text-[10px] font-black uppercase opacity-30" data-i18n="footer-project"></p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="de" id="htmlElement">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergii Yanchuk | Python: CineSearch Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+    
+    body { 
+        font-family: 'Inter', sans-serif; 
+        background-color: #F4F4F4; 
+        color: #1A1A1A; 
+        scroll-behavior: smooth; 
+        overflow-x: hidden; 
+    }
+    
+    /* --- Навигация --- */
+    .sticky-nav { 
+        position: sticky; 
+        top: 0; 
+        z-index: 100; 
+        background-color: rgba(244, 244, 244, 0.7); 
+        backdrop-filter: blur(10px); 
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    /* --- Адаптивная типографика --- */
+    .huge-title { 
+        font-size: clamp(2.2rem, 9vw, 7.5rem); 
+        line-height: 0.85; 
+        letter-spacing: -0.05em; 
+        text-transform: uppercase; 
+        font-weight: 900; 
+    }
+
+    /* --- Адаптивная сетка --- */
+    .swiss-grid { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 2rem; 
+    }
+    @media (min-width: 768px) {
+        .swiss-grid { 
+            display: grid; 
+            grid-template-columns: repeat(12, 1fr); 
+            gap: 1.5rem; 
+        }
+    }
+
+    /* --- Блок логотипов в шапке --- */
+    .tech-logo-wrapper {
+        position: relative;
+        width: clamp(280px, 40vw, 500px); 
+        height: clamp(280px, 40vw, 500px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .tech-logo-base {
+        width: 60%; 
+        height: auto;
+        opacity: 0.9;
+        filter: grayscale(1);
+        transition: all 0.6s ease;
+        z-index: 10;
+    }
+
+    /* Сателлиты (MongoDB & MySQL) */
+    .tech-logo-satellite {
+        position: absolute;
+        width: 40%; 
+        height: auto;
+        object-fit: contain;
+        filter: grayscale(1);
+        opacity: 0; /* ПОЛНОСТЬЮ ПРОЗРАЧНЫЕ В ПОКОЕ */
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 5;
+        pointer-events: none; /* Не мешают кликам, пока скрыты */
+    }
+
+    /* Анимация при наведении на весь Header */
+    header:hover .tech-logo-base { 
+        filter: grayscale(0); 
+        transform: rotate(-5deg) scale(1.05); 
+    }
+
+    header:hover .tech-logo-satellite { 
+        filter: grayscale(0); 
+        opacity: 1; /* ПОЯВЛЯЮТСЯ */
+        pointer-events: auto;
+    }
+
+    /* Эффект разлета */
+    header:hover #logo-mongo { transform: translate(-35%, -35%) rotate(-15deg) scale(1.1); }
+    header:hover #logo-mysql { transform: translate(35%, 35%) rotate(15deg) scale(1.1); }
+
+    @media (min-width: 1024px) {
+        header:hover #logo-mongo { transform: translate(-180px, -140px) rotate(-15deg) scale(1); }
+        header:hover #logo-mysql { transform: translate(180px, 140px) rotate(15deg) scale(1); }
+    }
+
+    /* --- Стили компонентов --- */
+    .section-label { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: #007BFF; margin-bottom: 1rem; display: block; }
+
+    .github-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background-color: #1A1A1A;
+        color: white;
+        padding: 1rem 2rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 12px;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 8px 8px 0px 0px #007BFF;
+        margin-top: 1.5rem;
+    }
+    .github-btn:hover { transform: translate(8px, 8px); box-shadow: 0px 0px 0px 0px #007BFF; background-color: #007BFF; }
+
+    .project-media { 
+        filter: grayscale(100%); 
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 2px solid #000;
+        background-color: white;
+    }
+    .project-media:hover { filter: grayscale(0%); transform: translateY(-5px); box-shadow: 20px 20px 0px 0px rgba(0, 123, 255, 0.1); }
+
+    .lang-switcher { cursor: pointer; font-weight: bold; transition: opacity 0.3s; }
+    .lang-switcher.active { opacity: 1; color: #1A1A1A; text-decoration: underline; }
+    .lang-switcher.inactive { opacity: 0.5; color: #9ca3af; text-decoration: none; }
+
+    .zoom-effect { transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+    .zoom-effect:hover { transform: scale(1.03); z-index: 10; position: relative; }
+    
+    .highlight-blue { color: #007BFF; }
+    </style>
+</head>
+<body class="p-6 md:p-12 lg:p-20 pt-0"> 
+    
+    <script>
+        const translations = {
+            de: {
+                'back-link': '← ZURÜCK',
+                'title': 'CineSearch<br><span class="highlight-blue italic">Analytics Engine</span>',
+                'case-study': 'Python & Database Integration',
+                'github-btn': 'CODE AUF GITHUB ANSEHEN',
+                'overview-main': 'Ein Backend-System zur Verknüpfung von relationalen (MySQL) und NoSQL-Datenbanken (MongoDB) für Echtzeit-Suche und Analyse.',
+                'goal-header': 'Projekt-Konzept',
+                'goal-text': 'Entwicklung einer CLI-Anwendung, die Filmdaten effizient abfragt und gleichzeitig jedes Nutzerereignis für spätere Analysen protokolliert.',
+                'context-header': 'Daten-Strategie',
+                'context-text': 'Nutzung der Sakila-Datenbank für strukturierte Abfragen und MongoDB Atlas für die Speicherung unstrukturierter Suchprotokolle.',
+                'work-header': 'Technische Umsetzung',
+                'work-text': 'Implementierung von asynchronem Logging, komplexen SQL-Joins und MongoDB-Aggregations-Pipelines für die Top-5 Analyse.',
+                'metrics-list-header': 'Core Features',
+                'metrics-python': 'Backend: Python 3.11, PyMySQL, PyMongo für nahtlose DB-Kommunikation.',
+                'metrics-ui': 'UI/UX: Rich-Library für professionelle Tabellen und interaktive Menüs im Terminal.',
+                'metrics-logging': 'Analytics: Automatisierte Protokollierung von Suchparametern und Zeitstempeln in JSON-Dokumenten.',
+                'impact-metrics': 'System-Performance',
+                'db-type': 'Cross-DB Pipeline',
+                'query-speed': 'Fast Retrieval',
+                'log-format': 'NoSQL Logging',
+                'interface': 'Rich CLI UI',
+                'insights-title': 'System-Architektur & Analyse',
+                'insight-terminal-t': 'Interaktives Terminal-Interface',
+                'insight-terminal-d': 'Demonstration der Live-Suche. Das System validiert Eingaben, führt SQL-Abfragen aus und rendert Ergebnisse in formatierten Tabellen.',
+                'insight-mongo-t': 'NoSQL Analytics Pipeline',
+                'insight-mongo-d': 'Jeder Suchvorgang wird als JSON-Objekt in MongoDB gespeichert. Dies ermöglicht tiefgehende Analysen über das Nutzerverhalten ohne das SQL-Hauptsystem zu belasten.',
+                'footer-project': 'Python CineSearch Project // Data Analytics Portfolio // 2026'
+            },
+            en: {
+                'back-link': '← BACK',
+                'title': 'CineSearch<br><span class="highlight-blue italic">Analytics Engine</span>',
+                'case-study': 'Python & Database Integration',
+                'github-btn': 'VIEW CODE ON GITHUB',
+                'overview-main': 'A backend system linking relational (MySQL) and NoSQL (MongoDB) databases for real-time search and analytical logging.',
+                'goal-header': 'Project Concept',
+                'goal-text': 'Developing a CLI application that efficiently queries movie data while simultaneously logging every user event for future analysis.',
+                'context-header': 'Data Strategy',
+                'context-text': 'Using the Sakila database for structured queries and MongoDB Atlas for storing unstructured search logs.',
+                'work-header': 'Technical Implementation',
+                'work-text': 'Implementation of asynchronous logging, complex SQL joins, and MongoDB aggregation pipelines for Top-5 analytics.',
+                'metrics-list-header': 'Core Features',
+                'metrics-python': 'Backend: Python 3.11, PyMySQL, PyMongo for seamless DB communication.',
+                'metrics-ui': 'UI/UX: Rich library for professional tables and interactive menus in the terminal.',
+                'metrics-logging': 'Analytics: Automated logging of search parameters and timestamps in JSON documents.',
+                'impact-metrics': 'System Performance',
+                'db-type': 'Cross-DB Pipeline',
+                'query-speed': 'Fast Retrieval',
+                'log-format': 'NoSQL Logging',
+                'interface': 'Rich CLI UI',
+                'insights-title': 'System Architecture & Insights',
+                'insight-terminal-t': 'Interactive Terminal Interface',
+                'insight-terminal-d': 'Demonstration of live search. The system validates inputs, executes SQL queries, and renders results in formatted tables.',
+                'insight-mongo-t': 'NoSQL Analytics Pipeline',
+                'insight-mongo-d': 'Every search operation is stored as a JSON object in MongoDB. This allows for deep analysis of user behavior without stressing the main SQL system.',
+                'footer-project': 'Python CineSearch Project // Data Analytics Portfolio // 2026'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'de';
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) element.innerHTML = translations[lang][key];
+            });
+            document.querySelectorAll('.lang-switcher').forEach(btn => {
+                btn.className = btn.getAttribute('data-lang') === lang ? 'lang-switcher active' : 'lang-switcher inactive';
+            });
+        }
+        window.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
+    </script>
+
+    <nav class="sticky-nav mb-12 flex justify-between items-center py-6 px-4 md:px-0">
+        <a href="index.html" class="font-bold uppercase tracking-tighter hover:text-blue-600 transition-colors opacity-70 hover:opacity-100" data-i18n="back-link"></a>
+        <div class="flex items-center gap-4 text-xs font-bold">
+            <span class="lang-switcher active" data-lang="de" onclick="setLanguage('de')">DE</span>
+            <span class="text-gray-400">/</span>
+            <span class="lang-switcher inactive" data-lang="en" onclick="setLanguage('en')">EN</span>
+        </div>
+    </nav>
+
+    <header class="flex flex-col lg:grid lg:grid-cols-12 gap-12 items-start mb-24 px-4 md:px-0">
+        <div class="w-full lg:col-span-8">
+            <span class="section-label" data-i18n="case-study"></span>
+            <h1 class="huge-title mb-8" data-i18n="title"></h1>
+            <p class="text-gray-600 mb-6 font-medium leading-tight text-xl md:text-2xl max-w-2xl" data-i18n="overview-main"></p>
+            
+            <a href="https://github.com/yanchuk-lab/CineSearch-Analytics-Terminal-App.git" target="_blank" class="github-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                <span data-i18n="github-btn"></span>
+            </a>
+        </div>
+        <div class="w-full lg:col-span-4 flex justify-center lg:justify-end">
+            <div class="tech-logo-wrapper">
+                <img src="pictures/MongoDB_Logo.svg.png" alt="MongoDB Logo" class="tech-logo-satellite" id="logo-mongo">
+                <img src="pictures/mysql-logo-svgrepo-com.svg" alt="MySQL Logo" class="tech-logo-satellite" id="logo-mysql">
+                <img src="pictures/python-svgrepo-com.svg" alt="Python Logo" class="tech-logo-base">
+            </div>
+        </div>
+    </header>
+
+    <section class="swiss-grid mb-32 border-t-4 border-black pt-12 px-4 md:px-0">
+        <div class="col-span-12 md:col-span-4">
+            <span class="section-label" data-i18n="goal-header"></span>
+            <p class="text-lg font-bold leading-snug pr-8 italic mb-8" data-i18n="goal-text"></p>
+            <span class="section-label" data-i18n="context-header"></span>
+            <p class="text-sm text-gray-600 leading-relaxed pr-8" data-i18n="context-text"></p>
+        </div>
+        
+        <div class="col-span-12 md:col-span-4">
+            <span class="section-label" data-i18n="work-header"></span>
+            <p class="text-sm text-gray-600 leading-relaxed mb-8" data-i18n="work-text"></p>
+            <div class="flex flex-wrap gap-2 mb-4 text-[10px] font-black uppercase">
+                <span class="border border-black px-2 py-1">MySQL SQL Joins</span>
+                <span class="border border-black px-2 py-1">MongoDB Atlas</span>
+                <span class="border border-black px-2 py-1">NoSQL Analytics</span>
+                <span class="border border-black px-2 py-1">CLI UX (Rich)</span>
+            </div>
+        </div>
+
+        <div class="col-span-12 md:col-span-4 bg-zinc-100 p-6">
+            <span class="section-label" data-i18n="metrics-list-header"></span>
+            <ul class="space-y-4">
+                <li><p class="text-[11px] font-bold leading-tight text-gray-700" data-i18n="metrics-python"></p></li>
+                <li><p class="text-[11px] font-bold leading-tight text-gray-700" data-i18n="metrics-ui"></p></li>
+                <li><p class="text-[11px] font-bold leading-tight text-gray-700" data-i18n="metrics-logging"></p></li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="swiss-grid mb-40 bg-white p-10 border-4 border-black shadow-[15px_15px_0px_0px_#007BFF] mx-4 md:mx-0">
+        <div class="col-span-12 md:col-span-3">
+            <h2 class="text-xs font-black uppercase tracking-widest text-blue-600" data-i18n="impact-metrics"></h2>
+        </div>
+        <div class="col-span-12 md:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center md:text-left">
+            <div><p class="text-3xl md:text-4xl font-black italic tracking-tighter">MySQL</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="db-type"></p></div>
+            <div><p class="text-3xl md:text-4xl font-black italic tracking-tighter">&lt; 100ms</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="query-speed"></p></div>
+            <div><p class="text-3xl md:text-4xl font-black italic tracking-tighter">JSON</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="log-format"></p></div>
+            <div><p class="text-3xl md:text-4xl font-black italic tracking-tighter">Modern</p><p class="text-[10px] font-bold uppercase text-gray-400 mt-2" data-i18n="interface"></p></div>
+        </div>
+    </section>
+
+    <main class="space-y-32 md:space-y-52 px-4 md:px-0">
+        <section class="swiss-grid items-center">
+            <div class="col-span-12 lg:col-span-8">
+                <video autoplay muted loop playsinline class="project-media w-full shadow-xl zoom-effect">
+                    <source src="pictures/Python_films_search.mov" type="video/mp4">
+                </video>
+            </div>
+            <div class="col-span-12 lg:col-span-4 lg:pl-16">
+                <span class="section-label">Module 1 // Terminal UX</span>
+                <h3 class="text-3xl md:text-4xl font-black uppercase mb-6 leading-none" data-i18n="insight-terminal-t"></h3>
+                <p class="text-gray-600 text-lg leading-relaxed italic" data-i18n="insight-terminal-d"></p>
+            </div>
+        </section>
+
+        <section class="swiss-grid items-center pb-20">
+            <div class="col-span-12 lg:col-span-4 lg:pr-16 order-2 lg:order-1">
+                <span class="section-label">Module 2 // MongoDB Logging</span>
+                <h3 class="text-3xl md:text-4xl font-black uppercase mb-6 leading-none" data-i18n="insight-mongo-t"></h3>
+                <p class="text-gray-600 text-lg leading-relaxed italic" data-i18n="insight-mongo-d"></p>
+            </div>
+            <div class="col-span-12 lg:col-span-8 order-1 lg:order-2">
+                <img src="pictures/mongodb_screenshot.png" class="project-media w-full shadow-xl zoom-effect">
+            </div>
+        </section>
+    </main>
+
+    <footer class="swiss-grid border-t-4 border-black pt-12 pb-20 mt-32 px-4 md:px-0">
+        <div class="col-span-12 md:col-span-6">
+            <p class="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-zinc-900">Sergii Yanchuk</p>
+        </div>
+        <div class="col-span-12 md:col-span-6 md:text-right flex flex-col justify-end text-gray-400 text-[10px] font-black uppercase tracking-widest">
+            <p data-i18n="footer-project"></p>
+        </div>
+    </footer>
+
+</body>
+</html>

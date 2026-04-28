@@ -1,0 +1,413 @@
+<!-- <!DOCTYPE html>
+<html lang="de" id="htmlElement">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergii Yanchuk | Data Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F0F0;
+            color: #1A1A1A;
+            line-height: 1.2;
+        }
+
+        .huge-name {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            letter-spacing: -0.07em;
+            line-height: 0.8;
+            text-transform: uppercase;
+        }
+
+        .grid-line {
+            border-top: 2px solid #1A1A1A;
+        }
+
+        .project-row:hover {
+            background-color: #E63946;
+            color: white;
+        }
+
+        .project-row:hover .project-tag {
+            border-color: white;
+            color: white;
+        }
+
+        .lang-switcher {
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .lang-switcher:hover {
+            opacity: 0.7;
+        }
+
+        .lang-switcher.active {
+            opacity: 1;
+        }
+
+        .lang-switcher.inactive {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <script>
+        const translations = {
+            de: {
+                'portfolio-title': 'Data Analyst Portfolio / 2026',
+                'tagline': 'Ich verwandle komplexe Daten in strategische Geschäftsentscheidungen.',
+                'projects-header': 'Ausgewählte Projekte',
+                'projects-index': 'Index (01—04)',
+                'project1-title': 'Dent Studio Analysis',
+                'project1-desc': 'Operations & Marketing Efficiency',
+                'project2-title': 'Tableau Ecosystem',
+                'project2-desc': 'Operational, Sales & UX Dashboards',
+                'project3-title': 'E-Commerce Analysis',
+                'project3-desc': 'Supply Chain & Sales Intelligence',
+                'project4-title': 'CineSearch Analytics',
+                'project4-desc': 'Backend-Entwicklung & Datenbank-Integration',
+                'contact-header': 'Kontakt',
+                'expertise-header': 'Expertise',
+                'expertise-list': 'Data Cleaning / ETL<br>Predictive Analytics<br>Business Intelligence<br>Statistical Modeling',
+                'copyright': '© 2026 Sergii Yanchuk'
+            },
+            en: {
+                'portfolio-title': 'Data Analyst Portfolio / 2026',
+                'tagline': 'I transform complex data into strategic business decisions.',
+                'projects-header': 'Selected Projects',
+                'projects-index': 'Index (01—04)',
+                'project1-title': 'Dent Studio Analysis',
+                'project1-desc': 'Operations & Marketing Efficiency',
+                'project2-title': 'Tableau Ecosystem',
+                'project2-desc': 'Operational, Sales & UX Dashboards',
+                'project3-title': 'E-Commerce Analysis',
+                'project3-desc': 'Supply Chain & Sales Intelligence',
+                'project4-title': 'CineSearch Analytics',
+                'project4-desc': 'Python Backend & SQL/NoSQL Integration',
+                'contact-header': 'Contact',
+                'expertise-header': 'Expertise',
+                'expertise-list': 'Data Cleaning / ETL<br>Predictive Analytics<br>Business Intelligence<br>Statistical Modeling',
+                'copyright': '© 2026 Sergii Yanchuk'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'de';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (element.classList.contains('expertise-list')) {
+                        element.innerHTML = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-switcher').forEach(btn => {
+                btn.className = btn.getAttribute('data-lang') === lang ? 'lang-switcher active' : 'lang-switcher inactive';
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
+    </script>
+
+    <header class="mb-32">
+        <div class="flex justify-between items-start mb-12">
+            <p class="font-bold uppercase tracking-tighter" data-i18n="portfolio-title"></p>
+            <div class="flex items-center gap-4">
+                <span class="lang-switcher" data-lang="de" onclick="setLanguage('de')">DE</span>
+                <span class="text-gray-400">/</span>
+                <span class="lang-switcher" data-lang="en" onclick="setLanguage('en')">EN</span>
+            </div>
+        </div>
+        <h1 class="huge-name mb-8">Sergii<br>Yanchuk</h1>
+        <p class="text-xl md:text-2xl font-medium max-w-md" data-i18n="tagline"></p>
+    </header>
+
+    <main class="mb-40">
+        <div class="flex justify-between items-end mb-4 px-2">
+            <h2 class="text-xs font-black uppercase tracking-[0.2em]" data-i18n="projects-header"></h2>
+            <span class="text-xs font-bold uppercase" data-i18n="projects-index"></span>
+        </div>
+
+        <div class="grid-line">
+            <a href="project-dental.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">01</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project1-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project1-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Google Sheets</span>
+                </div>
+            </a>
+
+            <a href="tableau-hub.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">02</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project2-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project2-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Tableau Public</span>
+                </div>
+            </a>
+
+            <a href="project-powerbi.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">03</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project3-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project3-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Power BI</span>
+                </div>
+            </a>
+
+            <a href="project-python.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">04</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project4-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project4-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Python / SQL & NoSQL</span>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer class="grid grid-cols-12 gap-8 border-t-4 border-black pt-12 pb-24">
+        <div class="col-span-12 md:col-span-4">
+            <h3 class="text-xs font-black uppercase tracking-widest mb-6" data-i18n="contact-header"></h3>
+            <a href="mailto:yanchuksergii@gmail.com" class="text-2xl font-black uppercase hover:text-red-600">Email</a><br>
+            <a href="https://www.linkedin.com/in/sergii-yanchuk-data-analyst/" target="_blank" class="text-2xl font-black uppercase hover:text-red-600">LinkedIn</a>
+        </div>
+        <div class="col-span-12 md:col-span-4">
+            <h3 class="text-xs font-black uppercase tracking-widest mb-6" data-i18n="expertise-header"></h3>
+            <p class="text-sm font-bold uppercase leading-relaxed expertise-list" data-i18n="expertise-list"></p>
+        </div>
+        <div class="col-span-12 md:col-span-4 md:text-right flex flex-col justify-between">
+            <p class="text-xs font-bold uppercase" data-i18n="copyright"></p>
+            <p class="text-4xl font-black italic text-[#E63946]">Y</p>
+        </div>
+    </footer>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="de" id="htmlElement">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergii Yanchuk | Data Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F0F0;
+            color: #1A1A1A;
+            line-height: 1.2;
+        }
+
+        .huge-name {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            letter-spacing: -0.07em;
+            line-height: 0.8;
+            text-transform: uppercase;
+        }
+
+        .grid-line {
+            border-top: 2px solid #1A1A1A;
+        }
+
+        .project-row:hover {
+            background-color: #E63946;
+            color: white;
+        }
+
+        .project-row:hover .project-tag {
+            border-color: white;
+            color: white;
+        }
+
+        .lang-switcher {
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .lang-switcher.active {
+            opacity: 1;
+        }
+
+        .lang-switcher.inactive {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <script>
+        const translations = {
+            de: {
+                'portfolio-title': 'Data Analyst Portfolio / 2026',
+                'tagline': 'Ich verwandle komplexe Daten in strategische Geschäftsentscheidungen.',
+                'projects-header': 'Ausgewählte Projekte',
+                'project5-title': 'CRM & Product Analytics',
+                'project5-desc': 'IT-School CRM Cleaning & Unit Economics',
+                'project4-title': 'CineSearch Analytics',
+                'project4-desc': 'Backend-Entwicklung & Datenbank-Integration',
+                'project3-title': 'E-Commerce Analysis',
+                'project3-desc': 'Supply Chain & Sales Intelligence',
+                'project2-title': 'Tableau Ecosystem',
+                'project2-desc': 'Operational, Sales & UX Dashboards',
+                'project1-title': 'Dent Studio Analysis',
+                'project1-desc': 'Operations & Marketing Efficiency',
+                'contact-header': 'Kontakt',
+                'expertise-header': 'Expertise',
+                'expertise-list': 'Data Cleaning / ETL<br>Predictive Analytics<br>Business Intelligence<br>Statistical Modeling',
+                'copyright': '© 2026 Sergii Yanchuk'
+            },
+            en: {
+                'portfolio-title': 'Data Analyst Portfolio / 2026',
+                'tagline': 'I transform complex data into strategic business decisions.',
+                'projects-header': 'Selected Projects',
+                'project5-title': 'CRM & Product Analytics',
+                'project5-desc': 'IT-School CRM Cleaning & Unit Economics',
+                'project4-title': 'CineSearch Analytics',
+                'project4-desc': 'Python Backend & SQL/NoSQL Integration',
+                'project3-title': 'E-Commerce Analysis',
+                'project3-desc': 'Supply Chain & Sales Intelligence',
+                'project2-title': 'Tableau Ecosystem',
+                'project2-desc': 'Operational, Sales & UX Dashboards',
+                'project1-title': 'Dent Studio Analysis',
+                'project1-desc': 'Operations & Marketing Efficiency',
+                'contact-header': 'Contact',
+                'expertise-header': 'Expertise',
+                'expertise-list': 'Data Cleaning / ETL<br>Predictive Analytics<br>Business Intelligence<br>Statistical Modeling',
+                'copyright': '© 2026 Sergii Yanchuk'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'de';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (element.classList.contains('expertise-list')) {
+                        element.innerHTML = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-switcher').forEach(btn => {
+                btn.className = btn.getAttribute('data-lang') === lang ? 'lang-switcher active' : 'lang-switcher inactive';
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
+    </script>
+
+    <header class="mb-32">
+        <div class="flex justify-between items-start mb-12">
+            <p class="font-bold uppercase tracking-tighter" data-i18n="portfolio-title"></p>
+            <div class="flex items-center gap-4 text-xs font-bold">
+                <span class="lang-switcher" data-lang="de" onclick="setLanguage('de')">DE</span>
+                <span class="text-gray-400">/</span>
+                <span class="lang-switcher" data-lang="en" onclick="setLanguage('en')">EN</span>
+            </div>
+        </div>
+        <h1 class="huge-name mb-8">Sergii<br>Yanchuk</h1>
+        <p class="text-xl md:text-2xl font-medium max-w-md" data-i18n="tagline"></p>
+    </header>
+
+    <main class="mb-40">
+        <div class="flex justify-between items-end mb-4 px-2">
+            <h2 class="text-xs font-black uppercase tracking-[0.2em]" data-i18n="projects-header"></h2>
+            <span class="text-xs font-bold uppercase" data-i18n="projects-index"></span>
+        </div>
+
+        <div class="grid-line">
+            <a href="project-crm.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">05</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project5-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project5-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Python DA / Stats</span>
+                </div>
+            </a>
+
+            <a href="project-python.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">04</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project4-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project4-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Python / SQL</span>
+                </div>
+            </a>
+
+            <a href="project-powerbi.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">03</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project3-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project3-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Power BI</span>
+                </div>
+            </a>
+
+            <a href="tableau-hub.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">02</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project2-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project2-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Tableau Public</span>
+                </div>
+            </a>
+
+            <a href="project-dental.html" class="project-row block py-8 px-2 transition-all grid grid-cols-12 gap-4 border-b-2 border-black">
+                <div class="col-span-2 md:col-span-1 font-bold italic">01</div>
+                <div class="col-span-10 md:col-span-5 text-2xl md:text-4xl font-black uppercase tracking-tighter" data-i18n="project1-title"></div>
+                <div class="hidden md:block col-span-4 text-sm font-medium uppercase self-center" data-i18n="project1-desc"></div>
+                <div class="col-span-12 md:col-span-2 flex justify-end items-center mt-4 md:mt-0">
+                    <span class="project-tag border border-black px-3 py-1 text-[10px] font-bold uppercase">Google Sheets</span>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer class="grid grid-cols-12 gap-8 border-t-4 border-black pt-12 pb-24">
+        <div class="col-span-12 md:col-span-4">
+            <h3 class="text-xs font-black uppercase tracking-widest mb-6" data-i18n="contact-header"></h3>
+            <a href="mailto:yanchuksergii@gmail.com" class="text-2xl font-black uppercase hover:text-red-600 transition-colors">Email</a><br>
+            <a href="https://www.linkedin.com/in/sergii-yanchuk-data-analyst/" target="_blank" class="text-2xl font-black uppercase hover:text-red-600 transition-colors">LinkedIn</a><br>
+            <a href="https://github.com/yanchuk-lab" target="_blank" class="text-2xl font-black uppercase hover:text-red-600 transition-colors">GitHub</a>
+        </div>
+        <div class="col-span-12 md:col-span-4">
+            <h3 class="text-xs font-black uppercase tracking-widest mb-6" data-i18n="expertise-header"></h3>
+            <p class="text-sm font-bold uppercase leading-relaxed expertise-list" data-i18n="expertise-list"></p>
+        </div>
+        <div class="col-span-12 md:col-span-4 md:text-right flex flex-col justify-between">
+            <p class="text-xs font-bold uppercase" data-i18n="copyright"></p>
+            <p class="text-4xl font-black italic text-[#E63946]">Y</p>
+        </div>
+    </footer>
+</body>
+</html>
